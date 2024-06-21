@@ -34,8 +34,8 @@ precip_list_og = ['Convective', 'Stratiform', 'Anvil'] # reflectivity class list
 nclass_og = len(precip_list_og)
 
 # read in new cloud classification
-ncfile = '/ourdisk/hpc/radclouds/auto_archive_notyet/tape_2copies/cloud_class/precip_class_ctl.nc' # haiyan
-# ncfile = '/ourdisk/hpc/radclouds/auto_archive_notyet/tape_2copies/cloud_class/precip_class_ctl_maria.nc' #maria
+ncfile = 'user_path/precip_class_ctl.nc' # haiyan
+# ncfile = 'user_path/precip_class_ctl_maria.nc' #maria
 with Dataset(ncfile, 'r') as nc:
     c_type = nc.variables['type'][:,t0:t1,:,:] # memb x time x lat x lon; 1=deep convective, 2=congestus, 3=shallow convective, 4=stratiform, 5=anvil, 0=nonraining
 
@@ -48,13 +48,13 @@ strat_mem = np.empty((nmem,nz)) # mem x level
 
 for m in range(nmem):
     # read in files to calculate CRF
-    file = '/ourdisk/hpc/radclouds/auto_archive_notyet/tape_2copies/tc_ens/'+istorm+'/memb_'+membs[m]+'/ctl/post/d02/RTHRATLW_HiRes.nc'
+    file = 'user_path/RTHRATLW_HiRes.nc'
     lw = mf.var_read_edges_time(file,'RTHRATLW',t0,t1)*3600*24 # K/s --> K/d
-    file = '/ourdisk/hpc/radclouds/auto_archive_notyet/tape_2copies/tc_ens/'+istorm+'/memb_'+membs[m]+'/ctl/post/d02/RTHRATLWC_HiRes.nc'
+    file = 'user_path/RTHRATLWC_HiRes.nc'
     lwc = mf.var_read_edges_time(file,'RTHRATLWC',t0, t1)*3600*24 # K/s --> K/d
-    file = '/ourdisk/hpc/radclouds/auto_archive_notyet/tape_2copies/tc_ens/'+istorm+'/memb_'+membs[m]+'/ctl/post/d02/RTHRATSW_HiRes.nc'
+    file = 'user_path/RTHRATSW_HiRes.nc'
     sw = mf.var_read_edges_time(file, 'RTHRATSW',t0,t1)*3600*24 # K/s --> K/d
-    file = '/ourdisk/hpc/radclouds/auto_archive_notyet/tape_2copies/tc_ens/'+istorm+'/memb_'+membs[m]+'/ctl/post/d02/RTHRATSWC_HiRes.nc'
+    file = 'user_path/RTHRATSWC_HiRes.nc'
     swc = mf.var_read_edges_time(file, 'RTHRATSWC',t0,t1)*3600*24 # K/s --> K/d
     crf = sw + lw - lwc - swc # time x level x lat x lon
     del sw
@@ -96,7 +96,7 @@ print(pres_plot.shape)
 xlabel = 'CRF [K/day]'
 
 mf.plot_crfprofiles_class(crf_type_prof, precip_list, conv_prof, strat_prof, xlabel, pres_plot)
-plt.savefig('/home/eluschen/figures/profiles/crf_profile_'+str(nmem)+'mem_time_'+str(t0)+'_'+str(t1)+'_'+istorm+'.png')
+plt.savefig('user_path/crf_profile_'+str(nmem)+'mem_time_'+str(t0)+'_'+str(t1)+'_'+istorm+'.png')
 
 del crf_type_prof
 del conv_prof
@@ -116,9 +116,9 @@ strat_mem_og = np.empty((nmem,nz)) # mem x level
 
 for m in range(nmem):
     # read in w and og classification
-    file = '/ourdisk/hpc/radclouds/auto_archive_notyet/tape_2copies/tc_ens/'+istorm+'/memb_'+membs[m]+'/ctl/post/d02/W_HiRes.nc'
+    file = 'user_path/W_HiRes.nc'
     w = mf.var_read_edges_time(file,'W',t0,t1) # time x level x lat x lon
-    pclass_trad = '/ourdisk/hpc/radclouds/auto_archive_notyet/tape_2copies/tc_ens/'+istorm+'/memb_'+membs[m]+'/ctl/post/d02/strat.nc'
+    pclass_trad = 'user_path/strat.nc'
     c_type_og = mf.var_read_edges_time(pclass_trad, 'strat', t0, t1) # time x lat x lon; 1=convective, 2=stratiform, 3=anvil, 0=nonraining
 
     # New Classification
@@ -179,6 +179,6 @@ print(pres_plot.shape)
 xlabel = 'w [m/s]'
 
 mf.plot_wprofiles_class(w_type_prof, precip_list, conv_prof, strat_prof, w_type_prof_og, precip_list_og, conv_prof_og, strat_prof_og, xlabel, pres_plot)
-plt.savefig('/home/eluschen/figures/profiles/w_profile_'+str(nmem)+'mem_time_'+str(t0)+'_'+str(t1)+'_'+istorm+'.png')
+plt.savefig('user_path/w_profile_'+str(nmem)+'mem_time_'+str(t0)+'_'+str(t1)+'_'+istorm+'.png')
 
 print('W Profiles Complete')
